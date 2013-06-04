@@ -89,7 +89,7 @@ public class ExampleExperiment {
          * for each new experiment */
         params.algName = "PUT ALGORITHM NAME";
         params.comments = "PUT MORE DETAILED INFORMATION, PARAMETER SETTINGS ETC";
-        outputPath = "PUT_MY_BBOB_DATA_PATH";
+        outputPath = "tmp1";
 
         if (args.length > 0) {
             outputPath = args[0]; // Warning: might override the assignment above.
