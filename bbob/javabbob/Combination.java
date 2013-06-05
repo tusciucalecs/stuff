@@ -1,6 +1,6 @@
 package javabbob;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Combination {
@@ -40,7 +40,7 @@ public class Combination {
     }
 
     public static Map<Combination, Integer> initCombinations() {
-        Map<Combination, Integer> combinations = new HashMap<Combination, Integer>();
+        Map<Combination, Integer> combinations = new LinkedHashMap<Combination, Integer>();
         Combination combination;
         combination = new Combination("rand1", 1., 0.1);
         combinations.put(combination, 10);

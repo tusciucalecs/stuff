@@ -1,5 +1,6 @@
 package javabbob;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Calendar;
@@ -11,13 +12,14 @@ import java.text.SimpleDateFormat;
  */
 public class Experiment {
 
+    static Map<Combination, Integer> hits = new HashMap<Combination, Integer>();
+
     public static void DDE(JNIfgeneric fgeneric, int dim, double maxfunevals,
             Random random) {
 
         int np = 8 * dim;
         double[][] population = new double[np][dim];
         double[] populationFitness = new double[np];
-        double best = 100000.;
         int total = 90;
 
         /* Obtain the target function value, which only use is termination */
@@ -96,16 +98,8 @@ public class Experiment {
 
                 fitness = fgeneric.evaluate(trialVector);
 
-                if (fitness < best) {
-                    best = fitness;
-                    if (fitness < fTarget) {
-//                        for (Combination combination1 : combinationsChances
-//                                .keySet()) {
-//                            System.out.println(combination1 + " "
-//                                    + combinationsChances.get(combination1));
-//                        }
-                        return;
-                    }
+                if (fitness < fTarget) {
+                    return;
                 }
                 /* select */
                 if (fitness < populationFitness[i]) {
@@ -122,6 +116,8 @@ public class Experiment {
             population = nextPopulation;
             populationFitness = nextPopulationFitness;
         }
+        // printDistribution(combinationsChances);
+        System.out.println(fgeneric.getBest() + " vs " + fgeneric.getFtarget());
     }
 
     private static Combination getCombination(
@@ -132,10 +128,26 @@ public class Experiment {
         for (Combination combination : combinationsChances.keySet()) {
             tempTotal += combinationsChances.get(combination);
             if (tempTotal >= randVal) {
+                hits.put(
+                        combination,
+                        hits.get(combination) != null ? hits.get(combination) + 1
+                                : 1);
                 return combination;
             }
         }
         return null;
+    }
+
+    private static void printDistribution(Map<Combination, Integer> map) {
+        System.out.println();
+        for (Combination combination1 : map.keySet()) {
+            System.out.println(combination1 + " : " + map.get(combination1));
+        }
+
+        System.out.println();
+        for (Combination combination1 : hits.keySet()) {
+            System.out.println(combination1 + " : " + hits.get(combination1));
+        }
     }
 
     /**
@@ -198,33 +210,36 @@ public class Experiment {
         long t0 = System.currentTimeMillis();
 
         /* now the main loop */
-        for (idx_dim = 0; idx_dim < 2/* dim.length */; idx_dim++) {
+        for (idx_dim = 0; idx_dim < dim.length; idx_dim++) {
             /*
              * Function indices are from 1 to 24 (noiseless)
              */
             for (ifun = 1; ifun <= 24; ifun++) { // Noiseless testbed
-                for (idx_instances = 0; idx_instances < 1/* instances.length */; idx_instances++) {
+                for (idx_instances = 0; idx_instances < instances.length; idx_instances++) {
 
                     /* Initialize the objective function in fgeneric. */
                     fgeneric.initBBOB(ifun, instances[idx_instances],
                             dim[idx_dim], outputPath, params);
                     /* Call to the optimizer with fgeneric as input */
-                    maxfunevals = 1e7 * dim[idx_dim];
+                    maxfunevals = 1e8 * dim[idx_dim];
                     independent_restarts = -1;
+                    t0 = System.currentTimeMillis();
                     while (fgeneric.getEvaluations() < maxfunevals) {
                         independent_restarts++;
-                        DDE(fgeneric, dim[idx_dim], 3e6, rand);
+                        DDE(fgeneric, dim[idx_dim], 1e4 * dim[idx_dim], rand);
                         if (fgeneric.getBest() < fgeneric.getFtarget())
                             break;
                     }
-
+                    if (fgeneric.getBest() > fgeneric.getFtarget()) {
+                        System.err.print("KICK-------   ");
+                    }
                     System.out.printf(
                             "f%d in %d-D, instance %d: FEs=%.0f, rr=%d", ifun,
                             dim[idx_dim], instances[idx_instances],
                             fgeneric.getEvaluations(), independent_restarts);
                     System.out
-                            .printf(" elapsed time [h]: %.4f\n",
-                                    (double) (System.currentTimeMillis() - t0) / 3600000.);
+                            .printf(" elapsed time [m]: %.4f\n",
+                                    (double) (System.currentTimeMillis() - t0) / 60000.);
 
                     /* call the BBOB closing function to wrap things up neatly */
                     fgeneric.exitBBOB();
