@@ -12,27 +12,28 @@ import java.text.SimpleDateFormat;
 public class Experiment {
 
     public static void DDE(JNIfgeneric fgeneric, int dim, double maxfunevals,
-            Random rand) {
+            Random random) {
 
         int np = 8 * dim;
         double[][] population = new double[np][dim];
         double[] populationFitness = new double[np];
-        double best = 1000.;
-        Map<Combination, Double> combinationsChances = Combination
-                .initCombinations();
+        double best = 100000.;
+        int total = 90;
 
         /* Obtain the target function value, which only use is termination */
-        double ftarget = fgeneric.getFtarget();
+        double fTarget = fgeneric.getFtarget();
         double fitness;
+
+        Map<Combination, Integer> combinationsChances = Combination
+                .initCombinations();
 
         /* Generate and evaluate the P0 population */
         for (int i = 0; i < np; i++) {
             for (int j = 0; j < dim; j++) {
-                population[i][j] = 10. * rand.nextDouble() - 5.;
+                population[i][j] = 10. * random.nextDouble() - 5.;
             }
             fitness = fgeneric.evaluate(population[i]);
-            if (fitness < ftarget) {
-                System.out.println("Found from start!");
+            if (fitness < fTarget) {
                 return;
             }
             populationFitness[i] = fitness;
@@ -43,21 +44,76 @@ public class Experiment {
             double[] nextPopulationFitness = new double[np];
             for (int i = 0; i < np; i++) {
                 double[] targetVector = population[i];
-                double[] trialVector = null;
+                double[] trialVector = new double[dim];
+
+                Combination combination = getCombination(combinationsChances,
+                        random, total);
+
+                switch (combination.getGenerationStrategy()) {
+                case "rand1":
+                    double[] xr11 = population[random.nextInt(np)];
+                    double[] xr12 = population[random.nextInt(np)];
+                    double[] xr13 = population[random.nextInt(np)];
+                    for (int j = 0; j < dim; j++) {
+                        if (random.nextDouble() < combination.getCR()) {
+                            trialVector[j] = xr11[j] + combination.getF()
+                                    * (xr12[j] - xr13[j]);
+                        } else {
+                            trialVector[j] = targetVector[j];
+                        }
+                    }
+                    break;
+                case "rand2":
+                    double[] xr21 = population[random.nextInt(np)];
+                    double[] xr22 = population[random.nextInt(np)];
+                    double[] xr23 = population[random.nextInt(np)];
+                    double[] xr24 = population[random.nextInt(np)];
+                    double[] xr25 = population[random.nextInt(np)];
+                    for (int j = 0; j < dim; j++) {
+                        if (random.nextDouble() < combination.getCR()) {
+                            trialVector[j] = xr21[j] + combination.getF()
+                                    * (xr22[j] - xr23[j]) + combination.getF()
+                                    * (xr24[j] - xr25[j]);
+                        } else {
+                            trialVector[j] = targetVector[j];
+                        }
+                    }
+                    break;
+                case "currentToRand1":
+                    double[] xr31 = population[random.nextInt(np)];
+                    double[] xr32 = population[random.nextInt(np)];
+                    double[] xr33 = population[random.nextInt(np)];
+                    for (int j = 0; j < dim; j++) {
+                        trialVector[j] = targetVector[j] + combination.getF()
+                                * (xr31[j] - targetVector[j])
+                                + combination.getF() * (xr32[j] - xr33[j]);
+
+                    }
+                    break;
+                default:
+                    break;
+                }
 
                 fitness = fgeneric.evaluate(trialVector);
 
                 if (fitness < best) {
                     best = fitness;
-                    if (fitness < ftarget) {
-                        System.out.println("Fount from " + iter);
-                        break;
+                    if (fitness < fTarget) {
+//                        for (Combination combination1 : combinationsChances
+//                                .keySet()) {
+//                            System.out.println(combination1 + " "
+//                                    + combinationsChances.get(combination1));
+//                        }
+                        return;
                     }
                 }
                 /* select */
                 if (fitness < populationFitness[i]) {
                     nextPopulation[i] = trialVector;
                     nextPopulationFitness[i] = fitness;
+                    combinationsChances.put(combination,
+                            combinationsChances.get(combination) + 1);
+                    total++;
                 } else {
                     nextPopulation[i] = targetVector;
                     nextPopulationFitness[i] = populationFitness[i];
@@ -65,16 +121,20 @@ public class Experiment {
             }
             population = nextPopulation;
             populationFitness = nextPopulationFitness;
-            if (iter % 1e3 == 0) {
-                System.out.println("Best = " + best);
-            }
         }
     }
 
     private static Combination getCombination(
-            Map<Combination, Double> combinationsChances) {
-        
-        
+            Map<Combination, Integer> combinationsChances, Random random,
+            int total) {
+        int tempTotal = 0;
+        int randVal = random.nextInt(total + 1);
+        for (Combination combination : combinationsChances.keySet()) {
+            tempTotal += combinationsChances.get(combination);
+            if (tempTotal >= randVal) {
+                return combination;
+            }
+        }
         return null;
     }
 
@@ -136,50 +196,34 @@ public class Experiment {
 
         /* record starting time (also useful as random number generation seed) */
         long t0 = System.currentTimeMillis();
-        for (ifun = 1; ifun <= 24; ifun++) { // Noiseless testbed
-            for (idx_instances = 0; idx_instances < instances.length; idx_instances++) {
-
-                /* Initialize the objective function in fgeneric. */
-                fgeneric.initBBOB(ifun, instances[idx_instances],
-                        dim[0], outputPath, params);
-                System.out.println(fgeneric.getFtarget());
-                fgeneric.exitBBOB();
-            }
-        }
-        if (t0 > 1)
-            return;
 
         /* now the main loop */
-        for (idx_dim = 0; idx_dim < dim.length; idx_dim++) {
+        for (idx_dim = 0; idx_dim < 2/* dim.length */; idx_dim++) {
             /*
              * Function indices are from 1 to 24 (noiseless)
              */
             for (ifun = 1; ifun <= 24; ifun++) { // Noiseless testbed
-                for (idx_instances = 0; idx_instances < instances.length; idx_instances++) {
+                for (idx_instances = 0; idx_instances < 1/* instances.length */; idx_instances++) {
 
                     /* Initialize the objective function in fgeneric. */
                     fgeneric.initBBOB(ifun, instances[idx_instances],
                             dim[idx_dim], outputPath, params);
                     /* Call to the optimizer with fgeneric as input */
-                    maxfunevals = 1e3 * dim[idx_dim];
+                    maxfunevals = 1e7 * dim[idx_dim];
                     independent_restarts = -1;
                     while (fgeneric.getEvaluations() < maxfunevals) {
                         independent_restarts++;
-                        DDE(fgeneric, dim[idx_dim],
-                                maxfunevals - fgeneric.getEvaluations(), rand);
+                        DDE(fgeneric, dim[idx_dim], 3e6, rand);
                         if (fgeneric.getBest() < fgeneric.getFtarget())
                             break;
                     }
 
+                    System.out.printf(
+                            "f%d in %d-D, instance %d: FEs=%.0f, rr=%d", ifun,
+                            dim[idx_dim], instances[idx_instances],
+                            fgeneric.getEvaluations(), independent_restarts);
                     System.out
-                            .printf("  f%d in %d-D, instance %d: FEs=%.0f with %d restarts,",
-                                    ifun, dim[idx_dim],
-                                    instances[idx_instances],
-                                    fgeneric.getEvaluations(),
-                                    independent_restarts);
-                    System.out
-                            .printf(" fbest-ftarget=%.4e, elapsed time [h]: %.2f\n",
-                                    fgeneric.getBest() - fgeneric.getFtarget(),
+                            .printf(" elapsed time [h]: %.4f\n",
                                     (double) (System.currentTimeMillis() - t0) / 3600000.);
 
                     /* call the BBOB closing function to wrap things up neatly */
