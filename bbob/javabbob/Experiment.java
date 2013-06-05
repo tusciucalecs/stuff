@@ -1,72 +1,81 @@
 package javabbob;
 
+import java.util.Map;
 import java.util.Random;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
 /**
  * Wrapper class running an entire BBOB experiment. It illustrates the
- * benchmarking of MY_OPTIMIZER on the noise-free testbed or the noisy testbed
- * (change the ifun loop in this case as given below). This class reimplements
- * the content of exampleexperiment.c from the original C version of the BBOB
- * code.
+ * benchmarking of DDE on the noise-free testbed.
  */
 public class Experiment {
 
-    /**
-     * Example optimiser. In the following, the pure random search optimization
-     * method is implemented as an example. Please include/insert any code as
-     * suitable.
-     * <p>
-     * This optimiser takes as argument an instance of JNIfgeneric which have
-     * all the information on the problem to solve. Only the methods
-     * getFtarget() and evaluate(x) of the class JNIfgeneric are used.
-     * <p>
-     * This method also takes as argument an instance of Random since one might
-     * want to set the seed of the random search.
-     * <p>
-     * The optimiser generates random vectors evaluated on fgeneric until the
-     * number of function evaluations is greater than maxfunevals or a function
-     * value smaller than the target given by fgeneric.getFtarget() is attained.
-     * The parameter maxfunevals to avoid problem when comparing it to
-     * 1000000000*dim where dim is the dimension of the problem.
-     * 
-     * @param fgeneric
-     *            an instance JNIfgeneric object
-     * @param dim
-     *            an integer giving the dimension of the problem
-     * @param maxfunevals
-     *            the maximum number of function evaluations
-     * @param rand
-     *            an instance of Random
-     */
-    public static void MY_OPTIMIZER(JNIfgeneric fgeneric, int dim,
-            double maxfunevals, Random rand) {
+    public static void DDE(JNIfgeneric fgeneric, int dim, double maxfunevals,
+            Random rand) {
 
-        double[] x = new double[dim];
+        int np = 8 * dim;
+        double[][] population = new double[np][dim];
+        double[] populationFitness = new double[np];
+        double best = 1000.;
+        Map<Combination, Double> combinationsChances = Combination
+                .initCombinations();
 
         /* Obtain the target function value, which only use is termination */
         double ftarget = fgeneric.getFtarget();
-        double f;
+        double fitness;
 
-        if (maxfunevals > 1e9 * dim) {
-            maxfunevals = 1e9 * dim;
+        /* Generate and evaluate the P0 population */
+        for (int i = 0; i < np; i++) {
+            for (int j = 0; j < dim; j++) {
+                population[i][j] = 10. * rand.nextDouble() - 5.;
+            }
+            fitness = fgeneric.evaluate(population[i]);
+            if (fitness < ftarget) {
+                System.out.println("Found from start!");
+                return;
+            }
+            populationFitness[i] = fitness;
         }
 
-        for (double iter = 0.; iter < maxfunevals; iter++) {
-            /* Generate individual */
-            for (int i = 0; i < dim; i++) {
-                x[i] = 10. * rand.nextDouble() - 5.;
-            }
+        for (int iter = 0; iter < maxfunevals; iter += np) {
+            double[][] nextPopulation = new double[np][dim];
+            double[] nextPopulationFitness = new double[np];
+            for (int i = 0; i < np; i++) {
+                double[] targetVector = population[i];
+                double[] trialVector = null;
 
-            /* evaluate X on the objective function */
-            f = fgeneric.evaluate(x);
+                fitness = fgeneric.evaluate(trialVector);
 
-            if (f < ftarget) {
-                break;
+                if (fitness < best) {
+                    best = fitness;
+                    if (fitness < ftarget) {
+                        System.out.println("Fount from " + iter);
+                        break;
+                    }
+                }
+                /* select */
+                if (fitness < populationFitness[i]) {
+                    nextPopulation[i] = trialVector;
+                    nextPopulationFitness[i] = fitness;
+                } else {
+                    nextPopulation[i] = targetVector;
+                    nextPopulationFitness[i] = populationFitness[i];
+                }
             }
-            // System.out.println(f + " din " + ftarget);
+            population = nextPopulation;
+            populationFitness = nextPopulationFitness;
+            if (iter % 1e3 == 0) {
+                System.out.println("Best = " + best);
+            }
         }
+    }
+
+    private static Combination getCombination(
+            Map<Combination, Double> combinationsChances) {
+        
+        
+        return null;
     }
 
     /**
@@ -127,6 +136,18 @@ public class Experiment {
 
         /* record starting time (also useful as random number generation seed) */
         long t0 = System.currentTimeMillis();
+        for (ifun = 1; ifun <= 24; ifun++) { // Noiseless testbed
+            for (idx_instances = 0; idx_instances < instances.length; idx_instances++) {
+
+                /* Initialize the objective function in fgeneric. */
+                fgeneric.initBBOB(ifun, instances[idx_instances],
+                        dim[0], outputPath, params);
+                System.out.println(fgeneric.getFtarget());
+                fgeneric.exitBBOB();
+            }
+        }
+        if (t0 > 1)
+            return;
 
         /* now the main loop */
         for (idx_dim = 0; idx_dim < dim.length; idx_dim++) {
@@ -140,12 +161,12 @@ public class Experiment {
                     fgeneric.initBBOB(ifun, instances[idx_instances],
                             dim[idx_dim], outputPath, params);
                     /* Call to the optimizer with fgeneric as input */
-                    maxfunevals = 1e3 * dim[idx_dim]; 
+                    maxfunevals = 1e3 * dim[idx_dim];
                     independent_restarts = -1;
                     while (fgeneric.getEvaluations() < maxfunevals) {
                         independent_restarts++;
-                        MY_OPTIMIZER(fgeneric, dim[idx_dim], maxfunevals
-                                - fgeneric.getEvaluations(), rand);
+                        DDE(fgeneric, dim[idx_dim],
+                                maxfunevals - fgeneric.getEvaluations(), rand);
                         if (fgeneric.getBest() < fgeneric.getFtarget())
                             break;
                     }

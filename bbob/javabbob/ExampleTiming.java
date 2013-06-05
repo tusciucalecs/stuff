@@ -1,8 +1,6 @@
 package javabbob;
 
 import java.util.Random;
-import java.util.Calendar;
-import java.text.SimpleDateFormat;
 
 /** Wrapper class running an entire BBOB timing experiment.
  * Measure the CPU-time of an experiment using an algorithm (in the example
