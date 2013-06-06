@@ -243,7 +243,7 @@ public class Experiment {
                         System.err.print("KICK-------   ");
                     }
                     System.out.printf(
-                            "f%d in %d-D, instance %d: FEs=%.0f, rr=%d", ifun,
+                            "f%d in %d-D, instance %d: FEs=%.2e, rr=%d", ifun,
                             dim[idx_dim], instances[idx_instances],
                             fgeneric.getEvaluations(), independent_restarts);
                     System.out
