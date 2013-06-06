@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 public class Experiment {
 
     static Map<Combination, Integer> hits = new HashMap<Combination, Integer>();
+    static long nrHits = 0;
 
     public static void DDE(JNIfgeneric fgeneric, int dim, double maxfunevals,
             Random random) {
@@ -20,7 +21,6 @@ public class Experiment {
         int np = 8 * dim;
         double[][] population = new double[np][dim];
         double[] populationFitness = new double[np];
-        int total = 90;
 
         /* Obtain the target function value, which only use is termination */
         double fTarget = fgeneric.getFtarget();
@@ -28,6 +28,7 @@ public class Experiment {
 
         Map<Combination, Integer> combinationsChances = Combination
                 .initCombinations();
+        int total = combinationsChances.size() * 10;
 
         /* Generate and evaluate the P0 population */
         for (int i = 0; i < np; i++) {
@@ -50,6 +51,7 @@ public class Experiment {
 
                 Combination combination = getCombination(combinationsChances,
                         random, total);
+                nrHits++;
 
                 switch (combination.getGenerationStrategy()) {
                 case "rand1":
@@ -115,16 +117,19 @@ public class Experiment {
             }
             population = nextPopulation;
             populationFitness = nextPopulationFitness;
+            // if (iter % 1e6 == 0 && iter > 0) {
+            // printDistribution(combinationsChances, total);
+            // System.out.println(fgeneric.getBest() + " vs "
+            // + fgeneric.getFtarget());
+            // }
         }
-        // printDistribution(combinationsChances);
-        System.out.println(fgeneric.getBest() + " vs " + fgeneric.getFtarget());
     }
 
     private static Combination getCombination(
             Map<Combination, Integer> combinationsChances, Random random,
             int total) {
         int tempTotal = 0;
-        int randVal = random.nextInt(total + 1);
+        int randVal = random.nextInt(total);
         for (Combination combination : combinationsChances.keySet()) {
             tempTotal += combinationsChances.get(combination);
             if (tempTotal >= randVal) {
@@ -138,15 +143,18 @@ public class Experiment {
         return null;
     }
 
-    private static void printDistribution(Map<Combination, Integer> map) {
-        System.out.println();
+    private static void printDistribution(Map<Combination, Integer> map,
+            long total) {
+        System.out.println("=================");
         for (Combination combination1 : map.keySet()) {
-            System.out.println(combination1 + " : " + map.get(combination1));
+            System.out.println(combination1 + " : " + map.get(combination1)
+                    * 100 / total + "%");
         }
 
         System.out.println();
         for (Combination combination1 : hits.keySet()) {
-            System.out.println(combination1 + " : " + hits.get(combination1));
+            System.out.println(combination1 + " : " + hits.get(combination1)
+                    * 100 / nrHits + "%");
         }
     }
 
@@ -226,9 +234,10 @@ public class Experiment {
                     t0 = System.currentTimeMillis();
                     while (fgeneric.getEvaluations() < maxfunevals) {
                         independent_restarts++;
-                        DDE(fgeneric, dim[idx_dim], 1e4 * dim[idx_dim], rand);
+                        DDE(fgeneric, dim[idx_dim], 5e3 * dim[idx_dim], rand);
                         if (fgeneric.getBest() < fgeneric.getFtarget())
                             break;
+                        // System.out.println("RESTART");
                     }
                     if (fgeneric.getBest() > fgeneric.getFtarget()) {
                         System.err.print("KICK-------   ");

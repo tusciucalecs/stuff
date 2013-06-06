@@ -42,19 +42,19 @@ public class Combination {
     public static Map<Combination, Integer> initCombinations() {
         Map<Combination, Integer> combinations = new LinkedHashMap<Combination, Integer>();
         Combination combination;
-        combination = new Combination("rand1", 1., 0.1);
-        combinations.put(combination, 10);
+//        combination = new Combination("rand1", 1., 0.1);
+//        combinations.put(combination, 10);
         combination = new Combination("rand1", 1., 0.9);
         combinations.put(combination, 10);
-        combination = new Combination("rand1", 0.8, 0.2);
-        combinations.put(combination, 10);
+//        combination = new Combination("rand1", 0.8, 0.2);
+//        combinations.put(combination, 10);
 
-        combination = new Combination("rand2", 1., 0.1);
-        combinations.put(combination, 10);
+//        combination = new Combination("rand2", 1., 0.1);
+//        combinations.put(combination, 10);
         combination = new Combination("rand2", 1., 0.9);
         combinations.put(combination, 10);
-        combination = new Combination("rand2", 0.8, 0.2);
-        combinations.put(combination, 10);
+//        combination = new Combination("rand2", 0.8, 0.2);
+//        combinations.put(combination, 10);
 
         combination = new Combination("currentToRand1", 1., 0.1);
         combinations.put(combination, 10);
