@@ -190,7 +190,7 @@ public class Experiment {
          */
         params.algName = "DDE";
         params.comments = "DDE Info";
-        outputPath = "tmp1";
+        outputPath = "data";
 
         if (args.length > 0) {
             outputPath = args[0]; // Warning: might override the assignment
