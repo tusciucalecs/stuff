@@ -4,5 +4,6 @@
 *.jar
 *.war
 *.ear
-bbob/tmp/*
-bbob/tmp1/*
+
+#data files
+bbob/data/*
