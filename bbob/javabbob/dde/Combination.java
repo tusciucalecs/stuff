@@ -1,4 +1,4 @@
-package javabbob;
+package javabbob.dde;
 
 import java.util.HashMap;
 import java.util.Map;
