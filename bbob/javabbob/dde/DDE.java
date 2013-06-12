@@ -56,8 +56,17 @@ public class DDE {
                 switch (combination.getGenerationStrategy()) {
                 case "rand1":
                     double[] xr11 = population[random.nextInt(np)];
+                    while (xr11 == targetVector) {
+                        xr11 = population[random.nextInt(np)];
+                    }
                     double[] xr12 = population[random.nextInt(np)];
+                    while (xr12 == targetVector || xr12 == xr11) {
+                        xr12 = population[random.nextInt(np)];
+                    }
                     double[] xr13 = population[random.nextInt(np)];
+                    while (xr13 == targetVector || xr13 == xr11 || xr13 == xr12) {
+                        xr13 = population[random.nextInt(np)];
+                    }
                     for (int j = 0; j < dim; j++) {
                         if (random.nextDouble() < combination.getCR()) {
                             trialVector[j] = xr11[j] + combination.getF()
@@ -69,10 +78,27 @@ public class DDE {
                     break;
                 case "rand2":
                     double[] xr21 = population[random.nextInt(np)];
+                    while (xr21 == targetVector) {
+                        xr21 = population[random.nextInt(np)];
+                    }
                     double[] xr22 = population[random.nextInt(np)];
+                    while (xr22 == targetVector || xr22 == xr21) {
+                        xr22 = population[random.nextInt(np)];
+                    }
                     double[] xr23 = population[random.nextInt(np)];
+                    while (xr23 == targetVector || xr23 == xr21 || xr23 == xr22) {
+                        xr23 = population[random.nextInt(np)];
+                    }
                     double[] xr24 = population[random.nextInt(np)];
+                    while (xr24 == targetVector || xr24 == xr21 || xr24 == xr22
+                            || xr24 == xr23) {
+                        xr24 = population[random.nextInt(np)];
+                    }
                     double[] xr25 = population[random.nextInt(np)];
+                    while (xr25 == targetVector || xr25 == xr21 || xr25 == xr22
+                            || xr25 == xr23 || xr25 == xr24) {
+                        xr25 = population[random.nextInt(np)];
+                    }
                     for (int j = 0; j < dim; j++) {
                         if (random.nextDouble() < combination.getCR()) {
                             trialVector[j] = xr21[j] + combination.getF()
@@ -85,8 +111,17 @@ public class DDE {
                     break;
                 case "currentToRand1":
                     double[] xr31 = population[random.nextInt(np)];
+                    while (xr31 == targetVector) {
+                        xr31 = population[random.nextInt(np)];
+                    }
                     double[] xr32 = population[random.nextInt(np)];
+                    while (xr32 == targetVector || xr32 == xr31) {
+                        xr32 = population[random.nextInt(np)];
+                    }
                     double[] xr33 = population[random.nextInt(np)];
+                    while (xr33 == targetVector || xr33 == xr31 || xr33 == xr32) {
+                        xr33 = population[random.nextInt(np)];
+                    }
                     for (int j = 0; j < dim; j++) {
                         trialVector[j] = targetVector[j] + combination.getF()
                                 * (xr31[j] - targetVector[j])

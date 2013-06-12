@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="doc/|generatelib/|PUT_MY_BBOB_DATA_PATH/|tmp/|tmp1/|doc2/|data/" kind="src" path=""/>
+	<classpathentry excluding="doc/|generatelib/|PUT_MY_BBOB_DATA_PATH/|tmp/|tmp1/|doc2/|data/|lib/" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
