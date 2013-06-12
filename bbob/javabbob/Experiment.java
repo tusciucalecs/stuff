@@ -33,7 +33,7 @@ public class Experiment {
         /* Generate and evaluate the P0 population */
         for (int i = 0; i < np; i++) {
             for (int j = 0; j < dim; j++) {
-                population[i][j] = 10. * random.nextDouble() - 4.;
+                population[i][j] = 10. * random.nextDouble() - 5.;
             }
             fitness = fgeneric.evaluate(population[i]);
             if (fitness < fTarget) {
@@ -240,17 +240,17 @@ public class Experiment {
                             instances[idx_instances], dim[idx_dim], outputPath,
                             params);
                     /* Call to the optimizer with fgeneric as input */
-                    maxfunevals = 2e6 * dim[idx_dim];
+                    maxfunevals = 1e5 * dim[idx_dim];
                     independent_restarts = -1;
                     t0 = System.currentTimeMillis();
                     while (fgeneric.getEvaluations() < maxfunevals) {
                         independent_restarts++;
-                        DDE(fgeneric, dim[idx_dim], 1e6 * dim[idx_dim], rand);
+                        DDE(fgeneric, dim[idx_dim], 1e5 * dim[idx_dim], rand);
                         if (fgeneric.getBest() < fgeneric.getFtarget())
                             break;
-                        System.err.println("Restart " + independent_restarts
-                                + ": " + fgeneric.getBest() + " from "
-                                + fgeneric.getFtarget());
+                        // System.err.println("Restart " + independent_restarts
+                        // + ": " + fgeneric.getBest() + " from "
+                        // + fgeneric.getFtarget());
                     }
                     System.out.printf(
                             "f%d in %d-D, instance %d: FEs=%.2e, rr=%d",
@@ -258,7 +258,8 @@ public class Experiment {
                             instances[idx_instances],
                             fgeneric.getEvaluations(), independent_restarts);
                     System.out
-                            .printf(" elapsed time [m]: %.4f\n",
+                            .printf(" fbest-ftarget=%.4e, elapsed time [m]: %.4f\n",
+                                    fgeneric.getBest() - fgeneric.getFtarget(),
                                     (double) (System.currentTimeMillis() - t0) / 60000.);
 
                     /* call the BBOB closing function to wrap things up neatly */
