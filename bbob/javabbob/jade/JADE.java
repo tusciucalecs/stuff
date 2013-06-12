@@ -95,7 +95,7 @@ public class JADE {
                 // System.out.println(fgeneric.getBest() + " din "
                 // + fgeneric.getFtarget());
 
-//                progress += 1e5;
+                // progress += 1e5;
             }
         }
     }

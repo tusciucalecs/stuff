@@ -1,6 +1,6 @@
 package javabbob.dde;
 
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -11,8 +11,9 @@ import javabbob.JNIfgeneric;
  */
 public class DDE {
 
-    static Map<Combination, Integer> hits = new HashMap<Combination, Integer>();
-    static long nrHits = 0;
+    // static Map<Combination, Integer> hits = new HashMap<Combination,
+    // Integer>();
+    // static long nrHits = 0;
 
     public static void run(JNIfgeneric fgeneric, int dim, double maxfunevals,
             Random random) {
@@ -51,7 +52,7 @@ public class DDE {
 
                 Combination combination = getCombination(combinationsChances,
                         random, total);
-                nrHits++;
+                // nrHits++;
 
                 switch (combination.getGenerationStrategy()) {
                 case "rand1":
@@ -161,8 +162,8 @@ public class DDE {
 
                 combinationsChances = Combination.initCombinations();
                 total = combinationsChances.size() * 10;
-                hits = new HashMap<Combination, Integer>();
-                nrHits = 0;
+                // hits = new HashMap<Combination, Integer>();
+                // nrHits = 0;
 
                 progress += 1e5;
             }
@@ -177,30 +178,30 @@ public class DDE {
         for (Combination combination : combinationsChances.keySet()) {
             tempTotal += combinationsChances.get(combination);
             if (tempTotal >= randVal) {
-                hits.put(
-                        combination,
-                        hits.get(combination) != null ? hits.get(combination) + 1
-                                : 1);
+                // hits.put(
+                // combination,
+                // hits.get(combination) != null ? hits.get(combination) + 1
+                // : 1);
                 return combination;
             }
         }
         return null;
     }
 
-    private static void printDistribution(Map<Combination, Integer> map,
-            long total) {
-        System.out.println("=================");
-        System.out.println(total);
-        for (Combination combination1 : map.keySet()) {
-            System.out.println(combination1 + " : " + map.get(combination1)
-                    * 100 / total + "% as " + map.get(combination1));
-        }
-
-        System.out.println();
-        System.out.println(nrHits);
-        for (Combination combination1 : hits.keySet()) {
-            System.out.println(combination1 + " : " + hits.get(combination1)
-                    * 100 / nrHits + "% as " + hits.get(combination1));
-        }
-    }
+    // private static void printDistribution(Map<Combination, Integer> map,
+    // long total) {
+    // System.out.println("=================");
+    // System.out.println(total);
+    // for (Combination combination1 : map.keySet()) {
+    // System.out.println(combination1 + " : " + map.get(combination1)
+    // * 100 / total + "% as " + map.get(combination1));
+    // }
+    //
+    // System.out.println();
+    // System.out.println(nrHits);
+    // for (Combination combination1 : hits.keySet()) {
+    // System.out.println(combination1 + " : " + hits.get(combination1)
+    // * 100 / nrHits + "% as " + hits.get(combination1));
+    // }
+    // }
 }
