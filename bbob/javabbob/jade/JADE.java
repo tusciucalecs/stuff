@@ -121,8 +121,9 @@ public class JADE {
 
     private static Double meanSetDouble(Set<Double> set) {
         Double sum = 0.;
-        for (Double i : set)
+        for (Double i : set) {
             sum = sum + i;
+        }
         return sum / set.size();
     }
 }

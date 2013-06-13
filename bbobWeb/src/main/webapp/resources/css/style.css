@@ -1,0 +1,90 @@
+html,body {
+	height: 100%;
+}
+
+div.menu {
+	float: left;
+	height: 100%;
+	margin: 0px 5px 0px 0px;
+	padding: 5px 15px 5px 5px;
+	border-right: 1pt solid grey;
+}
+
+div.main {
+	margin: 0px 50px 50px 200px;
+	padding: 10px;
+}
+
+.center {
+	margin-left: auto;
+	margin-right: auto;
+	width: 13%;
+}
+
+.fullBorder,.fullBorder td,.fullBorder th {
+	border-collapse: collapse;
+	border: 1px solid black;
+	padding: 7px;
+}
+
+.border {
+	border-collapse: collapse;
+	border: 1px solid black;
+	padding: 3px;
+}
+
+.border td,.border th {
+	padding: 3px;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.red {
+	color: #FF0000;
+}
+
+div.grayButtonBox {
+	background-color: #eeeeee;
+	padding: 1em;
+	width: 17em;
+}
+
+.leftBlock {
+	float: left;
+	display: block;
+}
+
+.width100Procent {
+	width: 100%;
+}
+
+li.plot {
+	background-color: gainsboro;
+	clear: both;
+	float: left;
+	display: block;
+	margin: 0 0 20px;
+	padding: 1em;
+}
+
+.greyBackground {
+	background-color: gainsboro;
+}
+
+select.subjects,#selectType,#selectTable,#selectColumn,#selectedColumns
+	{
+	min-width: 11em;
+}
+
+.history {
+	float: left;
+	max-height: 44.5em;
+	overflow: auto;
+	margin-top: 2em;
+}
+
+.display-none {
+	display: none;
+}
