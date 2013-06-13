@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Random;
 
 import javabbob.dde.DDE;
+import javabbob.de.DE;
 import javabbob.jade.JADE;
 
 /**
@@ -55,6 +56,22 @@ public class Main {
         JNIfgeneric.makeBBOBdirs(outputPathJADE, false);
         Random randJADE = new Random(seed);
 
+        JNIfgeneric fgenericDE = new JNIfgeneric();
+        JNIfgeneric.Params paramsDE = new JNIfgeneric.Params();
+        paramsDE.algName = "DE";
+        paramsDE.comments = "DE Info";
+        String outputPathDE = "dataDE";
+        JNIfgeneric.makeBBOBdirs(outputPathDE, false);
+        Random randDE = new Random(seed);
+
+        // JNIfgeneric fgenericDEASP = new JNIfgeneric();
+        // JNIfgeneric.Params paramsDEASP = new JNIfgeneric.Params();
+        // paramsDEASP.algName = "DEASP";
+        // paramsDEASP.comments = "DEASP Info";
+        // String outputPathDEASP = "dataDEASP";
+        // JNIfgeneric.makeBBOBdirs(outputPathDEASP, false);
+        // Random randDEASP = new Random(seed);
+
         /* now the main loop */
         for (idx_dim = 0; idx_dim < 1/* dim.length */; idx_dim++) {
             for (idx_fun = 0; idx_fun < functions.length; idx_fun++) {
@@ -66,6 +83,12 @@ public class Main {
                     runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
                             idx_instances, fgenericJADE, paramsJADE,
                             outputPathJADE, randJADE);
+                    runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
+                            idx_instances, fgenericDE, paramsDE,
+                            outputPathDE, randDE);
+                    // runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
+                    // idx_instances, fgenericDEASP, paramsDEASP,
+                    // outputPathDEASP, randDEASP);
                     System.out.println();
                 }
 
@@ -96,6 +119,13 @@ public class Main {
             break;
         case "JADE":
             JADE.run(fgeneric, dim[idx_dim], maxFES, random);
+            break;
+        case "DE":
+            DE.run(fgeneric, dim[idx_dim], maxFES, random);
+            break;
+        case "DEASP":
+            // DEASP.run(fgeneric, dim[idx_dim], maxFES, random);
+            break;
         default:
             break;
         }
