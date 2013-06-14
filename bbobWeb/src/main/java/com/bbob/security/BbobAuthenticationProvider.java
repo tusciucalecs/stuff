@@ -31,13 +31,13 @@ public final class BbobAuthenticationProvider implements
         String username = (String) authentication.getPrincipal();
 
         if (username == null || username.trim().equals("")) {
-            LOGGER.debug("username is null or empty");
+            LOGGER.warn("username is null or empty");
             throw new BadCredentialsException("Enter your username address.");
         }
 
         String decodedPassword = (String) authentication.getCredentials();
         if (StringUtils.equalsIgnoreCase("", decodedPassword)) {
-            LOGGER.debug("Password is null or empty");
+            LOGGER.warn("Password is null or empty");
             throw new BadCredentialsException("Enter your password.");
         }
 
@@ -46,7 +46,7 @@ public final class BbobAuthenticationProvider implements
         Account account = accountService.findAccountByUsername(username);
 
         if (account != null && account.getPassword().equals(password)) {
-            LOGGER.debug("Logged with username: " + username);
+            LOGGER.info("Logged with username: " + username);
             return userService.loadGrantedAuthorities(username, account);
         } else {
             throw new BadCredentialsException("Authentication failed. "

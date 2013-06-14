@@ -25,7 +25,6 @@ public final class LoginController {
     public String viewLoginPage() {
         Account account = userService.getAccountIfUserIsAuthenticated();
         if (account != null) {
-            logger.debug("User is authenticated. Redirect to home page");
             return "redirect:/home";
         }
         return "login";

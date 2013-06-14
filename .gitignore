@@ -4,6 +4,8 @@
 *.jar
 *.war
 *.ear
+# Maven target folder#
+bbobWeb/target
 
 #data files
 bbob/data*

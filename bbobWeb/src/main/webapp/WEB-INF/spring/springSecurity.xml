@@ -12,6 +12,7 @@
 		<logout logout-success-url="/login" />
 		<logout logout-url="/signout" delete-cookies="JSESSIONID" />
 		<!-- Authentication policy -->
+		<intercept-url pattern="/favicon.ico" access="permitAll"/>
 		<intercept-url pattern="/login*" access="permitAll"/>
 		<intercept-url pattern="/resources/**" access="permitAll" />
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
