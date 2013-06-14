@@ -14,3 +14,13 @@
  type="text/css" />
 <script type="text/javascript"
  src="<c:url value="/resources/js/libs/jquery/jquery-ui-1.8.19.custom.min.js" />"></script>
+ 
+<script type="text/javascript">
+    $.ajaxSetup({
+        cache : false
+    });
+</script>
+
+<script type="text/javascript">
+    var bbobContext = "<%= response.encodeURL(request.getContextPath()) %>";
+</script>

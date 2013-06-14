@@ -88,3 +88,21 @@ select.subjects,#selectType,#selectTable,#selectColumn,#selectedColumns
 .display-none {
 	display: none;
 }
+
+ul {
+	width: 760px;
+	margin-bottom: 20px;
+	overflow: hidden;
+	border-top: 1px solid #ccc;
+}
+
+li {
+	line-height: 1.5em;
+	border-bottom: 1px solid #ccc;
+	float: left;
+	display: inline;
+}
+
+#triple li {
+	width: 50%;
+}
