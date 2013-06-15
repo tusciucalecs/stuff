@@ -41,7 +41,7 @@ public class DEASP {
             pi[i] = Math.round(np + random.nextDouble());
         }
 
-        double progress = 1e5;
+        // double progress = 1e5;
         double iter = 0;
         while (iter < maxfunevals) {
             double[][] nextPopulation = new double[np][dim];
@@ -175,15 +175,15 @@ public class DEASP {
                 np = newNp;
             }
 
-            if (iter > progress) {
-                System.out.println("----------------");
-                System.out.printf("%.2e ", iter);
-                System.out.println(fgeneric.getBest() + " din "
-                        + fgeneric.getFtarget());
-                System.out.println("NP: " + np);
-
-                progress += 1e5;
-            }
+            // if (iter > progress) {
+            // System.out.println("----------------");
+            // System.out.printf("%.2e ", iter);
+            // System.out.println(fgeneric.getBest() + " din "
+            // + fgeneric.getFtarget());
+            // System.out.println("NP: " + np);
+            //
+            // progress += 1e5;
+            // }
         }
     }
 }

@@ -78,15 +78,15 @@ public class Main {
             for (idx_fun = 0; idx_fun < functions.length; idx_fun++) {
                 for (idx_instances = 0; idx_instances < instances.length; idx_instances++) {
 
-                    // runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
-                    // idx_instances, fgenericDDE, paramsDDE,
-                    // outputPathDDE, randDDE);
-                    // runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
-                    // idx_instances, fgenericJADE, paramsJADE,
-                    // outputPathJADE, randJADE);
-                    // runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
-                    // idx_instances, fgenericDE, paramsDE, outputPathDE,
-                    // randDE);
+                    runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
+                            idx_instances, fgenericDDE, paramsDDE,
+                            outputPathDDE, randDDE);
+                    runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
+                            idx_instances, fgenericJADE, paramsJADE,
+                            outputPathJADE, randJADE);
+                    runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
+                            idx_instances, fgenericDE, paramsDE, outputPathDE,
+                            randDE);
                     runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
                             idx_instances, fgenericDEASP, paramsDEASP,
                             outputPathDEASP, randDEASP);
