@@ -32,8 +32,6 @@
 
 		<div>
 			<c:if test="${not empty param.error}">
-				<span>
-					${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message} </span>
 				<span> Login error</span>
 			</c:if>
 		</div>
