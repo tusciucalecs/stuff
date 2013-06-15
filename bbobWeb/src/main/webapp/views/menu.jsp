@@ -7,8 +7,9 @@
 <div class="menu">
 	<img src='<c:url value="/resources/img/images.JPG" />' />
 	<div>
-		Logged in as:<br /> ${account.user.name}<br />
+		Logged in as:  ${account.user.name}<br />
 	</div>
+	<br />
 	<a href="<c:url value="/user/experiment" />">Experiment</a><br />
 	<a href="<c:url value="/user/statistics" />">Statistics</a><br />
 	<br />

@@ -1,7 +1,5 @@
 package com.bbob.controllers;
 
-import com.bbob.models.Algorithm;
-
 public class Statistic {
     private String name;
 
