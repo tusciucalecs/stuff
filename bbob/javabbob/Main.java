@@ -6,6 +6,7 @@ import java.util.Random;
 
 import javabbob.dde.DDE;
 import javabbob.de.DE;
+import javabbob.deasp.DEASP;
 import javabbob.jade.JADE;
 
 /**
@@ -28,9 +29,9 @@ public class Main {
         // 38, 39, 40 };
         final int instances[] = { 1 };
         /* Function indices are from 1 to 24 (noiseless) */
-        final int functions[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 };
-        // final int functions[] = { 1, 2, 3, 4, 5, 15, 16, 17, 18, 19 };
+        // final int functions[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+        // 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 };
+        final int functions[] = { 1, 2, 3, 4, 5, 15, 16, 17, 18, 19 };
         // final int functions[] = { 16 };
         int idx_dim, idx_fun, idx_instances;
 
@@ -64,31 +65,31 @@ public class Main {
         JNIfgeneric.makeBBOBdirs(outputPathDE, false);
         Random randDE = new Random(seed);
 
-        // JNIfgeneric fgenericDEASP = new JNIfgeneric();
-        // JNIfgeneric.Params paramsDEASP = new JNIfgeneric.Params();
-        // paramsDEASP.algName = "DEASP";
-        // paramsDEASP.comments = "DEASP Info";
-        // String outputPathDEASP = "dataDEASP";
-        // JNIfgeneric.makeBBOBdirs(outputPathDEASP, false);
-        // Random randDEASP = new Random(seed);
+        JNIfgeneric fgenericDEASP = new JNIfgeneric();
+        JNIfgeneric.Params paramsDEASP = new JNIfgeneric.Params();
+        paramsDEASP.algName = "DEASP";
+        paramsDEASP.comments = "DEASP Info";
+        String outputPathDEASP = "dataDEASP";
+        JNIfgeneric.makeBBOBdirs(outputPathDEASP, false);
+        Random randDEASP = new Random(seed);
 
         /* now the main loop */
         for (idx_dim = 0; idx_dim < 1/* dim.length */; idx_dim++) {
             for (idx_fun = 0; idx_fun < functions.length; idx_fun++) {
                 for (idx_instances = 0; idx_instances < instances.length; idx_instances++) {
 
-                    runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
-                            idx_instances, fgenericDDE, paramsDDE,
-                            outputPathDDE, randDDE);
-                    runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
-                            idx_instances, fgenericJADE, paramsJADE,
-                            outputPathJADE, randJADE);
-                    runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
-                            idx_instances, fgenericDE, paramsDE,
-                            outputPathDE, randDE);
                     // runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
-                    // idx_instances, fgenericDEASP, paramsDEASP,
-                    // outputPathDEASP, randDEASP);
+                    // idx_instances, fgenericDDE, paramsDDE,
+                    // outputPathDDE, randDDE);
+                    // runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
+                    // idx_instances, fgenericJADE, paramsJADE,
+                    // outputPathJADE, randJADE);
+                    // runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
+                    // idx_instances, fgenericDE, paramsDE, outputPathDE,
+                    // randDE);
+                    runAlgorithm(dim, instances, functions, idx_dim, idx_fun,
+                            idx_instances, fgenericDEASP, paramsDEASP,
+                            outputPathDEASP, randDEASP);
                     System.out.println();
                 }
 
@@ -124,7 +125,7 @@ public class Main {
             DE.run(fgeneric, dim[idx_dim], maxFES, random);
             break;
         case "DEASP":
-            // DEASP.run(fgeneric, dim[idx_dim], maxFES, random);
+            DEASP.run(fgeneric, dim[idx_dim], maxFES, random);
             break;
         default:
             break;

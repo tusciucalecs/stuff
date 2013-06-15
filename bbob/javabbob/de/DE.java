@@ -14,7 +14,7 @@ public class DE {
             Random random) {
 
         int np = 8 * dim;
-        double CR = 0.9;
+        double CR = 0.5;
         double F = 1;
         double[][] population = new double[np][dim];
         double[] populationFitness = new double[np];
