@@ -87,7 +87,9 @@ public final class StatisticsController {
                 .entrySet()) {
             Statistic statistic = new Statistic();
             statistic.setName(function.getKey());
-            Integer index = 0;
+            //Order is important for chart data table check @Algorithm
+            Integer index = 3;
+            Double maxDifference = Double.MIN_VALUE;
             for (Algorithm algorithm : Algorithm.values()) {
                 List<Run> runs = function.getValue().get(algorithm);
                 Double max = Double.MIN_VALUE;
@@ -116,7 +118,18 @@ public final class StatisticsController {
                 array[2] = (min + mean) / 2;
                 array[3] = (max + mean) / 2;
                 array[4] = max;
-                index++;
+                // check if the values are visible on the google chart
+                if (max - min > maxDifference) {
+                    maxDifference = max - min;
+                }
+                Double minimumToBeVisible = maxDifference / 10;
+                if (max - min < minimumToBeVisible) {
+                    array[1] = minimumToBeVisible / 2;
+                    array[2] = minimumToBeVisible / 2;
+                    array[3] = minimumToBeVisible / 2;
+                    array[4] = minimumToBeVisible / 2;
+                }
+                index--;
             }
             statistics.add(statistic);
         }

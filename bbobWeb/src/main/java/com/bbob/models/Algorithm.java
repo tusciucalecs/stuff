@@ -1,5 +1,6 @@
 package com.bbob.models;
 
 public enum Algorithm {
-    DDE, JADE, DE, DEASP
+    // order is important when creating the datatable @StatisticsController 
+    DEASP, DE, JADE, DDE
 }
