@@ -122,7 +122,7 @@ public final class StatisticsController {
                 if (max - min > maxDifference) {
                     maxDifference = max - min;
                 }
-                Double minimumToBeVisible = maxDifference / 10;
+                Double minimumToBeVisible = maxDifference / 25;
                 if (max - min < minimumToBeVisible) {
                     array[1] = minimumToBeVisible / 2;
                     array[2] = minimumToBeVisible / 2;
